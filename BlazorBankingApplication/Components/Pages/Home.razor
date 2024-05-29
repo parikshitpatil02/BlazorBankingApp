@@ -1,0 +1,56 @@
+﻿@page "/"
+
+@using BlazorBankingApplication.DataAccess
+@using BlazorBankingApplication.Models
+
+@inject IMySqlDataAccess _data
+@inject IConfiguration _config
+@inject NavigationManager Navigation
+@inject SharedDataService SharedDataService
+
+<div class="hero">
+    <div class="hero-content">
+        <h1>Welcome to Golden Horizon Bank</h1>
+        <p>Manage your finances anytime, anywhere.</p>
+    </div>
+</div>
+
+<div class="actions">
+    <button @onclick="@(() => Navigation.NavigateTo("/login"))">Login</button>
+    <button @onclick="@(() => Navigation.NavigateTo("/create-account"))">Create Account</button>
+</div>
+
+<div class="savings-info">
+    <h2>Open a Savings Account</h2>
+    <p>Earn 2.70% annual interest on your savings. Start growing your money today!</p>
+</div>
+
+<style scoped>
+    .hero {
+        /* Styles for hero section (background, height, etc.) */
+    }
+
+    .hero-content {
+        /* Styles for hero content (text alignment, margins) */
+    }
+
+    .actions {
+        display: flex;
+        justify-content: center;
+        margin-top: 2rem;
+    }
+
+        .actions button {
+            margin: 0 1rem;
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 5px;
+            background-color: #007bff;
+            color: #fff;
+            cursor: pointer;
+        }
+
+    .savings-info {
+        margin-top: 2rem;
+    }
+</style>

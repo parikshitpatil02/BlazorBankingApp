@@ -1,0 +1,78 @@
+﻿@page "/addmoney"
+
+@using BlazorBankingApplication.DataAccess
+@using BlazorBankingApplication.Models
+
+@using System.Linq.Expressions
+@inject NavigationManager Navigation
+@inject SharedDataService SharedDataService
+@inject IMySqlDataAccess _data
+@inject IConfiguration _config
+
+@if (!moneyAdded)
+{
+
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-6 card shadow-sm p-4">
+                <h3 class="mb-4">Add Money to Your Account</h3>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="amount" class="form-label">Enter Amount:</label>
+                        <input type="number" class="form-control" id="amount" @bind="@DepositAmt.amount" placeholder="Enter amount (e.g., 1000.00)">
+                    </div>
+
+                </div>
+
+                <hr class="mb-4">
+
+                <div class="mb-3">
+                    <h5 class="mb-2">Payment Method:</h5>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" id="creditCard" name="paymentMethod" value="creditCard" @* @bind="@paymentMethod" *@>
+                        <label class="form-check-label" for="creditCard">Credit Card</label>
+                        <i class="bi bi-credit-card-fill text-primary ms-2"></i>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" id="debitCard" name="paymentMethod" value="debitCard" @* @bind="@paymentMethod" *@>
+                        <label class="form-check-label" for="debitCard">Debit Card</label>
+                        <i class="bi bi-credit-card text-primary ms-2"></i>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" id="upi" name="paymentMethod" value="upi" @* @bind="@paymentMethod" *@>
+                        <label class="form-check-label" for="paypal">UPI</label>
+                        <i class="bi bi-paypal text-primary ms-2"></i>
+                    </div>
+                </div>
+
+                <div @if="paymentMethod == 'creditCard'">
+                    <div class="form-group mb-3">
+                        <label for="cardNumber" class="form-label">Card Number:</label>
+                        <input type="text" class="form-control" id="cardNumber" placeholder="**** **** **** ****">
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="expirationDate" class="form-label">Expiration Date:</label>
+                            <input type="text" class="form-control" id="expirationDate" placeholder="MM/YY">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="cvv" class="form-label">CVV:</label>
+                            <input type="text" class="form-control" id="cvv" placeholder="***">
+                        </div>
+                    </div>
+                </div>
+
+                <button type="button" class="btn btn-primary float-end" @onclick="@(async () => await AddMoneyFunc())">Add Money</button>
+            </div>
+        </div>
+    </div>
+
+
+}
+else
+{
+    <h1>@DepositAmt.amount Rupees Deposited Successfully!!</h1>
+    <a href="loanmain" class="btn btn-primary">Explore Loans</a>
+    <a href="dashboard" class="btn btn-primary">Go to Dashboard</a>
+}

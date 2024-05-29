@@ -1,0 +1,166 @@
+﻿@page "/applyLoan"
+
+
+@using BlazorBankingApplication.DataAccess
+@using BlazorBankingApplication.Models
+
+@inject IMySqlDataAccess _data
+@inject IConfiguration _config
+@inject NavigationManager Navigation
+@inject SharedDataService SharedDataService
+
+<header class="container-fluid py-3 bg-primary text-white">
+    <div class="row">
+        <div class="col-md-8">
+            <h1>Golden Horizon Bank</h1>
+        </div>
+        <div class="col-md-4 d-flex justify-content-end align-items-center">
+            <span class="me-3">Hello, @firstName</span>
+            <a href="#" class="btn btn-light">Logout</a>
+        </div>
+    </div>
+</header>
+
+
+@if(!loanPassed)
+{
+    <EditForm Model="@newLoan" OnValidSubmit="@HandleSubmit">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+        <div class="container mt-5">
+            <h1>Please fill the details to get a loan</h1>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="card mb-3">
+                        <div class="card-header">
+                            Loan Amount (₹)
+                        </div>
+                        <div class="card-body">
+                            <input type="number" class="form-control" @bind="newLoan.LoanAmount" required />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card mb-3">
+                        <div class="card-header">
+                            Interest Rate (%)
+                        </div>
+                        <div class="card-body">
+                            @* <input type="number" class="form-control" @bind="loanDetails.InterestRate" required /> *@
+                            <input type="number" class="form-control" @bind="newLoan.InterestRate" disabled required />
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="card mb-3">
+                        <div class="card-header">
+                            Repayment Method
+                        </div>
+                        <div class="card-body">
+                            <select class="form-control" @bind="newLoan.RepaymentMode" required>
+                                <option value="Monthly" selected>Monthly</option>
+                                <option value="Quarterly">Quarterly</option>
+                                <option value="HalfYearly">Half Yearly</option>
+                                <option value="Yearly">Yearly</option>
+                            </select>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card mb-3">
+                        <div class="card-header">
+                            Enter Number of EMIs (according to repayment method)
+                        </div>
+                        <div class="card-body">
+                            <input type="number" class="form-control" @bind="newLoan.Duration" required />
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Confirm Details</button>
+        </div>
+    </EditForm>
+    @if (confirmLoan)
+    {
+        @if (loanDetails.EMIAmount > 0)
+        {
+            <div class="card mt-3">
+                <div class="card-header">
+                    EMI Details
+                </div>
+                <div class="card-body">
+                    <ul class="list-group">
+                        <li class="list-group-item">EMI Amount (₹): @loanDetails.EMIAmount</li>
+                        <li class="list-group-item">Next EMI Due: @loanDetails.NextEMIDue?.ToString("dd MMM yyyy") (if any)</li>
+                    </ul>
+                </div>
+            </div>
+        }
+        @if (loanDetails.EMIDates.Any())
+        {
+            <div class="card mt-3">
+                <div class="card-header">
+                    EMI Schedule
+                </div>
+                <div class="card-body">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Sr. No.</th>
+                                <th>EMI Due Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @for (int i = 0; i < loanDetails.EMIDates.Count; i++)
+                            {
+                                <tr>
+                                    <td>@($"{i + 1}")</td>
+                                    <td>@loanDetails.EMIDates[i].ToString("dd MMM yyyy")</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        }
+        <button type="button" class="btn btn-primary float-end" @onclick="@(async () => await LoanRequest())">Click to get the loan and add money to your Savings Account</button>
+
+    }
+
+    
+}
+else //loan passed successfully
+{
+    <header class="container-fluid py-3 bg-primary text-white">
+        <div class="row">
+            <div class="col-md-8">
+                <h1>Golden Horizon Bank</h1>
+            </div>
+            <div class="col-md-4 d-flex justify-content-end align-items-center">
+                <a href="#" class="btn btn-light">Logout</a>
+            </div>
+        </div>
+    </header>
+
+    <div class="container mt-5 text-center">
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <h4 class="alert-heading">Congratulations!</h4>
+            <p>Your loan has been approved and the money has been credited to your savings bank account.</p>
+            <hr>
+            <div class="d-flex justify-content-center">
+                <a href="loanmain" class="btn btn-primary">Explore Loans</a>
+                <a href="addmoney" class="btn btn-success mx-2">Add Money</a>
+                <a href="sendmoney" class="btn btn-info">Send Money</a>
+                <a href="dashboard" class="btn btn-primary">Dashboard</a>
+            </div>
+        </div>
+    </div>
+
+
+}

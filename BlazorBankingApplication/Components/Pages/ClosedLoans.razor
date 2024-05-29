@@ -1,0 +1,60 @@
+﻿@page "/closed-loans"
+
+@using BlazorBankingApplication.DataAccess
+@using BlazorBankingApplication.Models
+
+@inject IMySqlDataAccess _data
+@inject IConfiguration _config
+@inject NavigationManager Navigation
+@inject SharedDataService SharedDataService
+
+<header class="container-fluid py-3 bg-primary text-white">
+    <div class="row">
+        <div class="col-md-8">
+            <h1>Golden Horizon Bank</h1>
+        </div>
+        <div class="col-md-4 d-flex justify-content-end align-items-center">
+            <span class="me-3">Hello, @firstName</span>
+            <a href="#" class="btn btn-light">Logout</a>
+        </div>
+    </div>
+</header>
+<div class="container mt-3">
+    <h2 class="text-center mb-4">Closed Loans</h2>
+
+    <div class="table-responsive">
+        @if (thisLoan?.Any() == true) // Check if thisLoan is not null and has elements
+        {
+            <table class="table table-striped table-bordered">
+                <thead>
+                    <tr>
+                        <th scope="col">Loan ID</th>
+                        <th scope="col">Loan Amount</th>
+                        <th scope="col">Tenure</th>
+                        <th scope="col">Repayment Mode</th>
+                    </tr>
+                </thead>
+                <tbody>
+                
+                        @foreach (var loan in thisLoan)
+                        {
+                            <tr>
+                                <td>@loan.LoanID</td>
+                                <td>@loan.LoanAmount</td>
+                                <td>@loan.Duration</td>
+                                <td>@loan.RepaymentMode</td>
+                            </tr>
+                        }
+                
+                
+                </tbody>
+            </table>
+        }
+        else
+        {
+            <p>No Closed loans found.</p>
+            // Display message if no loans
+        }
+
+    </div>
+</div>

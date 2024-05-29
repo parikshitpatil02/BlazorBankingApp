@@ -1,0 +1,112 @@
+﻿@page "/dashboard"
+
+@using BlazorBankingApplication.DataAccess
+@using BlazorBankingApplication.Models
+
+@inject IMySqlDataAccess _data
+@inject IConfiguration _config
+@inject NavigationManager Navigation
+@inject SharedDataService SharedDataService
+
+@if (SharedDataService.loginValid == false)
+{
+    <p>Please Login again!</p>
+    <a href="/login" class="btn btn-primary">Login</a>
+}
+else
+{
+    
+    <header class="container-fluid py-3 bg-primary text-white">
+        <div class="row">
+            <div class="col-md-8">
+                <h1>Golden Horizon Bank</h1>
+            </div>
+            <div class="col-md-4 d-flex justify-content-end align-items-center">
+                <span class="me-3">Hello, @firstName</span>
+                <a href="#" class="btn btn-light">Logout</a>
+            </div>  
+        </div>
+    </header>
+    //ye code reminder wala hai
+    @if (dueLoans != null && dueLoans.Any())
+    {
+        <div class="container">
+            <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                <strong>Heads Up!</strong> You have upcoming EMI payments due within 10 days for the following loan(s):
+                <ul>
+                    @foreach (var loan in dueLoans)
+                    {
+                        <li>Loan ID: @loan.LoanID & Due Date: @loan.due_date.ToString("dd/MM/yyyy")</li>
+                    }
+                </ul>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        </div>
+    }
+    //yaha tak hai
+    <main class="container mt-5">
+        <div class="text-center mb-3">
+            <button class="btn btn-primary" @onclick="StartDashboard">View Dashboard</button>
+            <a href="loanmain" class="btn btn-primary">Explore Loans</a>
+            <a href="addmoney" class="btn btn-success mx-2">Add Money</a>
+            <a href="sendmoney" class="btn btn-info">Send Money</a>
+        </div>
+        @if(dashboard_status==true)
+        {
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="card mb-3">
+                        <div class="card-header bg-light">
+                            <h3>Account Balance</h3>
+                        </div>
+                        <div class="card-body">
+                            <h1 class="display-4" id="balance">@currBalance</h1>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card mb-3">
+                        <div class="card-header bg-light">
+                            <h3>Recent Transactions</h3>
+                        </div>
+                        <div class="card-body">
+                            <ul class="list-group" id="transactions">
+
+                                @if (transaction5?.Any() ?? false) // Check if transactions exist
+{
+  @foreach (var transaction in transaction5)
+  {
+    <li class="list-group-item d-flex justify-content-between align-items-center">
+      <div>
+        @transaction.trans_time.ToString("dd MMM yyyy")
+      </div>
+      <span>
+        @if (transaction.transaction_type == true) // Deposit
+        {
+                                                    <text><text style="color:green;">₹@transaction.amount.ToString("0.00")</text></text>
+        }
+        else
+        {
+          <text><text style="color:red;">₹@transaction.amount.ToString("0.00")</text></text>
+        }
+      </span>
+    </li>
+  }
+}
+else
+{
+  <p>No recent transactions found.</p> // Display message if no transactions
+}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+        
+        
+       
+    </main>
+}
+
+

@@ -1,0 +1,30 @@
+﻿#appt-section,
+#step-1,
+#step-2,
+#step-3 {
+    margin-bottom: 25px;
+}
+
+#deleteAppt:hover,
+#editAppt:hover {
+    cursor:pointer;
+}
+
+.available-appts-list-button {
+    background-color: #3a0674;
+}
+
+    .available-appts-list-button:hover {
+        background-color: #3a0674;
+        color: white;
+        transform: scale(1.01);
+    }
+
+.available-appts-list li{
+    list-style: none;
+}
+
+.available-appts-list li.already-reserved {
+    color: gray;
+}
+

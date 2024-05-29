@@ -1,0 +1,125 @@
+﻿@page "/create-account"
+
+@using BlazorBankingApplication.DataAccess
+@using BlazorBankingApplication.Models
+
+
+@inject IMySqlDataAccess _data
+@inject IConfiguration _config
+@inject NavigationManager NavigationManager
+
+<h3>One step closer towards Golden Horizon</h3>
+
+<div class="container">
+    <section id="create-appt" class="mt-5">
+        @if ((PersonalDetail))
+        {
+            <h3>Fill the details to open your account at Golden Horizon</h3>
+            //<EditForm Model=@newUser OnValidSubmit="@VerifyLogin">
+            <EditForm Model=@newCustomer OnValidSubmit="@SaveAccountInfo">
+                <DataAnnotationsValidator />
+                <ValidationSummary />
+
+                <div class="mb-3 row">
+                    <div class="col">
+                        <label for="fname" class="form-label">First Name</label>
+                        <InputText class="form-control mb-2" id="fname" @bind-Value=addCustomer.first_name />
+                    </div>
+                    <div class="col">
+                        <label for="lname" class="form-label">Last Name</label>
+                        <InputText class="form-control mb-2" id="lname" @bind-Value=addCustomer.last_name/>
+                    </div>
+                </div>
+
+                <div class="mb-3 row">
+    
+                        <div class="col">
+                            <label for="date" class="form-label">Date of Birth</label>
+                            <input type="date" class="form-control" id="date" @bind-value="addCustomer.date_of_birth" />
+                        </div>
+
+                        @* <label for="dob" class="form-label">Enter Date of Birth</label>
+                        <InputDate class="form-control mb-2" id="dob" @bind-Value=addCustomer.date_of_birth /> *@
+
+                    <div class="col">
+                        <label for="phone" class="form-label">Phone Number</label>
+                        <InputText class="form-control mb-2" id="phone" @bind-Value=addCustomer.phone_number/>
+                    </div>
+                </div>
+                <div class="row">
+                    <label for="email" class="form-label">Enter Email</label>
+                    <InputText class="form-control mb-2" id="email" @bind-Value=addCustomer.email />
+                </div>
+                <div class="row">
+                    <label for="address" class="form-label">Enter Address</label>
+                    <InputText class="form-control mb-2" id="address" @bind-Value=addCustomer.address />
+                </div>
+
+
+                <div class="d-grid gap-2">
+                    <button type="submit" class="btn alert-primary mt-3">Submit</button>
+                </div>
+            </EditForm>
+        }
+    </section>
+    <section class="mt-5">
+
+        @if ((credential))
+        {
+            <h3>Create username and password to open your account at Golden Horizon</h3>
+            <EditForm Model=@newUser OnValidSubmit="@UserPass">
+                <DataAnnotationsValidator />
+                <ValidationSummary />
+
+                <div class="row">
+                    <label for="uName" class="form-label">Enter Username</label>
+                    <InputText class="form-control mb-2" id="uName" @bind-Value=addUser.Username />
+                </div>
+                <div class="row">
+                    <label for="passW" class="form-label">Enter Password</label>
+                    <InputText class="form-control mb-2" id="passW" @bind-Value=addUser.Password />
+                </div>
+                <div class="d-grid gap-2">
+                    <button type="submit" class="btn alert-primary mt-3">Submit</button>
+                </div>
+            </EditForm>
+        }
+    </section>
+    <section class="mt-5">
+        @if ((!usernameAvailable))
+        {
+            <h2>Username Not Available! Please enter a different username.</h2>
+        }
+    </section>
+
+    <section class="mt-5">
+        @if ((accountCreated))
+        {
+            <h2>Account Created Successfully, Remember your Userame and Password!</h2>
+        }
+    </section>
+
+    <section class="mt-5">
+        @if ((depositMoney))
+        {
+            <h3>Lets add first money to your newly created Golden Account</h3>
+            @* <EditForm OnValidSubmit="@MoneyDeposited">
+                <DataAnnotationsValidator />
+                <ValidationSummary />
+                *@
+            <EditForm Model=@firstDepositAmt OnValidSubmit="@MoneyDeposited">
+                <div class="row">
+                    <label for="money" class="form-label">Enter Amount</label>
+                    <input type="number" class="form-control" id="money" step="0.01" min="500" @bind-value="firstDepositAmt.amount" />
+                </div>
+                <div class="d-grid gap-2">
+                    <button type="submit" class="btn alert-primary mt-3" >Submit</button>
+                </div>
+            </EditForm>
+               
+           @* </EditForm> *@
+        }
+    </section>
+</div>
+
+                

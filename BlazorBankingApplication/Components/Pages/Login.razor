@@ -1,0 +1,69 @@
+﻿@page "/login"
+
+@using BlazorBankingApplication.DataAccess
+@using BlazorBankingApplication.Models
+
+
+@inject IMySqlDataAccess _data
+@inject IConfiguration _config
+@inject NavigationManager NavigationManager
+@inject SharedDataService SharedDataService
+
+
+
+<div class="container">
+    <section id="create-appt" class="mt-5">
+        @if ((createStatus))
+        {
+            <h3>Let's Login into your Golden Account</h3>
+            <EditForm Model=@newUser OnValidSubmit="@VerifyLogin">
+                <DataAnnotationsValidator />
+                <ValidationSummary />
+                <div class="mb-3">
+                    <label for="name" class="form-label">Enter Username</label>
+                    <InputText class="form-control mb-2" id="name" @bind-Value=addUser.UName />
+                </div>
+                <div class="mb-3">
+                    <label for="pass" class="form-label">Enter Password</label>
+                    <InputText class="form-control mb-2" id="pass" @bind-Value=addUser.Pword />
+                </div>
+
+                <div class="d-grid gap-2">
+                    <button type="submit" class="btn alert-primary mt-3">Login</button>
+                </div>
+            </EditForm>
+        }
+    </section>
+
+    <section>
+        <button class="btn-primary" onclick="document.location='/create-account'">Create Account</button>
+    </section>
+
+    <section class="mt-5">
+        @if ((sos && ver))
+        {
+            if (userVerified)
+            {
+                <h3>Login Successful</h3>
+
+            }
+            else
+            {
+                <h3>Incorrect Password</h3>
+            }
+
+
+        }
+        else if (ver)
+        {
+            <h3>Invalid Username</h3>
+        }
+    </section>
+
+
+</div>
+
+@* @code k andar ka pura code Admin.razor.cs meh shift kr diya hai *@
+
+
+  

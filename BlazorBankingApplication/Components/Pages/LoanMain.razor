@@ -1,0 +1,55 @@
+﻿@page "/loanmain"
+
+@using BlazorBankingApplication.DataAccess
+@using BlazorBankingApplication.Models
+
+
+@inject IMySqlDataAccess _data
+@inject IConfiguration _config
+@inject NavigationManager NavigationManager
+@inject SharedDataService SharedDataService
+
+<header class="container-fluid py-3 bg-primary text-white">
+    <div class="row">
+        <div class="col-md-8">
+            <h1>Golden Horizon Bank</h1>
+        </div>
+        <div class="col-md-4 d-flex justify-content-end align-items-center">
+            <span class="me-3">Hello, @firstName</span>
+            <a href="#" class="btn btn-light">Logout</a>
+        </div>
+    </div>
+</header>
+ <main class="container mt-5">
+    <div class="text-center mb-3">
+        <a href="loan-calculator" class="btn btn-primary">Loan EMI Calculator</a>
+        <a href="applyloan" class="btn btn-success mx-2">Get an Instant Loan</a>
+        <a href="active-loans" class="btn btn-success mx-2">Pay your loan EMI</a>
+    </div>
+
+    @if(loanOn)
+    {
+        <div class="container mt-5">
+
+            <div class="row text-center mb-3 justify-content-center">
+                <div class="col-md-4 mb-3">
+                    <div class="card loan-summary-card">
+                        <div class="card-body">
+                            <h5 class="card-title"><a style="text-decoration: none; a:hover {color: hotpink;}" href="active-loans">Active Loans</a></h5>
+                            <p class="card-text h2 font-weight-bold">@aloan</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <div class="card loan-summary-card">
+                        <div class="card-body">
+
+                            <h5 class="card-title"><a style="text-decoration: none; a:hover {color: hotpink;}" href="closed-loans">Closed Loans</a></h5>
+                            <p class="card-text h2 font-weight-bold">@cloan</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</main>
